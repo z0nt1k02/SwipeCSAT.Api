@@ -1,0 +1,23 @@
+﻿GET http://localhost:5203/api/categories
+
+###
+POST http://localhost:5203/api/categories
+Content-Type: application/json
+{
+  "id": "1",
+  "Name": "Рестораны",
+  "Properties":["Кухня", "Цена", "Сервис","Атмосфера"]
+}
+
+###
+POST http://localhost:5203/api/products
+Content-Type: application/json
+{
+  "id": 1,
+  "Name": "Burger King",
+  "CategoryId": 1
+}
+
+###
+POST http://localhost:5203/api/products/1/properties/Кухня?raiting=5
+Content-Type: application/json
