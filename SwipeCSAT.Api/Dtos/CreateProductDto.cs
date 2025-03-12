@@ -3,9 +3,9 @@
 namespace SwipeCSAT.Api.Dtos
 {
     public record class CreateProductDto(
-        [Required]int Id,
-        [Required]int CategoryId,
-        [Required]string Name   
+        [Required]string Name,
+        [Required] string CategoryName,
+        [Required] string Description
     );
     
 }

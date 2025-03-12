@@ -19,5 +19,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:5203/api/products/1/properties/Кухня?raiting=5
+POST http://localhost:5203/api/products/1/properties/Кухня
 Content-Type: application/json
+
+5

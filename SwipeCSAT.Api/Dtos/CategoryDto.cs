@@ -1,9 +1,10 @@
 ﻿namespace SwipeCSAT.Api.Dtos
 {
     public record class CategoryDto(
-        int Id,
+        Guid Id,
         string Name,
-        List<string> Properties
+        List<string> CriterionsNames,
+        List<ProductDto> Products
     );
     
 }

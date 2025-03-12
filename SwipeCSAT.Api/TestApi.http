@@ -1,0 +1,6 @@
+﻿POST http://localhost:5203/api/categories
+Content-Type: application/json
+
+{
+  "Name": "Рестораны"
+}

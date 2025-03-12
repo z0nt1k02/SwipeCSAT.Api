@@ -5,10 +5,10 @@ using SwipeCSAT.Api.Dtos;
 namespace SwipeCSAT.Api.Dtos
 {
     public record class ProductDto(
-        int Id,
+        Guid Id,
         string Name,
-        Dictionary<string,int> Properties,
-        int CategoryId
+        Dictionary<string,int> Criterions,
+        string CagtegorName
     );
     
 }
