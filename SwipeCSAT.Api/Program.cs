@@ -13,8 +13,18 @@ builder.Services.AddDbContext<SwipeCSATDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 });
+
 builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<CriterionsRepository>();
+
+
 var app = builder.Build();
+
+
+app.MapCriterionsEdnpoints();
+app.MapCategoriesEndpoints();
+app.MapProductsEndpoints();
 
 
 app.Run();

@@ -1,80 +1,68 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SwipeCSAT.Api.Dtos;
 using SwipeCSAT.Api.Entities;
+using SwipeCSAT.Api.Mapping;
 
 namespace SwipeCSAT.Api.Repositories;
 
 public class CategoryRepository
 {
-    public readonly SwipeCSATDbContext _context;
+    private readonly SwipeCSATDbContext _context;
+    
+
     
     public CategoryRepository(SwipeCSATDbContext context)
     {
         _context = context;
     }
 
-    //Получение всех категорий
     public async Task<List<CategoryEntity>> GetAllCategories()
     {
-        return await _context.Categories.AsNoTracking().ToListAsync();
+       return await _context.Categories.Include(c=>c.Criterions).Include(x=>x.Products).ToListAsync();
     }
 
-    //Получение категорий с продуктами  
-    public async Task<List<CategoryEntity>> GetWithProducts(Guid id)
+    public async Task<CategoryEntity> GetCategoryByName(string name)
     {
-        return await _context.Categories
-            .Include(x => x.Products)
-            .AsNoTracking()
-            .ToListAsync();
+        return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
+            ?? throw new Exception("Данная категория не найдена");
     }
 
-    //Получение категории по id
-    public async Task<CategoryEntity?> GetCategoryById(Guid id)
-    {
-        return await _context.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
-    }
-
-    //Создание категории
-    public async Task<CategoryEntity> CreateCategory(string Name)
+    public async Task<FullCategoryDto> Add(string name, List<string> criterionsNames)
     {
         var category = new CategoryEntity
         {
-            Name = Name,
+            Name = name,
             Id = Guid.NewGuid(),
-            Products = new List<ProductEntity>()
+            Products = new List<ProductEntity>(),
+            Criterions = new List<CriterionEntity>()
         };
-
-        await _context.Categories.AddAsync(category);
+        _context.Categories.Add(category);
         await _context.SaveChangesAsync();
-        return category;
-    }
+        foreach (var criterionName in criterionsNames)
+        {
+            var criterion = await _context.Criterions.FirstOrDefaultAsync(x => x.Name == criterionName)
+                ?? throw new Exception("Данный критерий не найден");
 
-    //Обновление имени категории
-    public async Task UpdateCategoryByName(string Name,string NewName)
-    {
-        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == Name) 
-            ?? throw new Exception("Категория не найдена");
+            category.Criterions.Add(criterion);
+            criterion.Categories.Add(category);
+            //_context.Criterions.Attach(criterion);
+            
+        }
+        //_context.Categories.Attach(category);
         
-        category.Name = NewName;
         await _context.SaveChangesAsync();
+        return category.ToDto();
     }
 
-    //Получение категории по имени
-    public async Task<CategoryEntity> GetCategoryByName(string Name)
-    {
-        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == Name)
-            ?? throw new Exception("Категория не найдена");
-
-        return category;
-    }
-    //Удаление категории
     public async Task DeleteCategory(string name)
     {
-        await _context.Categories
-            .Where(x => x.Name == name)
-            .ExecuteDeleteAsync();
+        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
+            ?? throw new Exception("Данная категория не найдена");
+        _context.Categories.Remove(category);
+        await _context.SaveChangesAsync();
     }
+
+
 
 }
 

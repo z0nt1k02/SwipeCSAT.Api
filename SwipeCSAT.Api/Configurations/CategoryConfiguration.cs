@@ -11,8 +11,12 @@ public class CategoryConfiguration : IEntityTypeConfiguration<CategoryEntity>
         builder.HasKey(x => x.Id);
 
         builder.HasMany(x => x.Products)
-            .WithOne(x => x.Category)
-            .HasForeignKey(x => x.CategoryId);
+            .WithOne(x => x.Category);
+            
+
+        builder.HasMany(x => x.Criterions)
+            .WithMany(x => x.Categories).UsingEntity(j=>j.ToTable("CategoryCriterion"));
+            
     }
 }
 

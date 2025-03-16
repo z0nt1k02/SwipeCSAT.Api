@@ -11,10 +11,13 @@ public class ProductConfiguration : IEntityTypeConfiguration<ProductEntity>
         builder.HasKey(x => x.Id);
 
         builder.HasOne(x => x.Category)
-            .WithMany(x => x.Products)
-            .HasForeignKey(x => x.CategoryId);
+            .WithMany(x => x.Products);
+
 
         builder.HasMany(x => x.Criterions)
-            .WithOne(p => p.Product);
+            .WithMany(p => p.Products);
+
+        builder.HasMany(x => x.Criterions)
+            .WithMany(x => x.Products);
     }
 }

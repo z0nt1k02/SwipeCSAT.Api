@@ -8,11 +8,11 @@ public class CriterionRatingConfiguration : IEntityTypeConfiguration<CriterionRa
 {
     public void Configure(EntityTypeBuilder<CriterionRatingEntity> builder)
     {
-        builder.HasKey(x => x.CriterionName);
+        builder.HasKey(c => c.Id);
 
         builder.HasOne(builder => builder.Product)
-            .WithMany()
-            .HasForeignKey(builder => builder.ProductId);
+            .WithMany();
+            
     }
 }
 

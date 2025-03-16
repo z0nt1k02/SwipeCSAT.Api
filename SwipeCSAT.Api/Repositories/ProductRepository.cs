@@ -1,45 +1,60 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SwipeCSAT.Api.Entities;
-using Microsoft.AspNetCore.JsonPatch;
-using SwipeCSAT.Api.Dtos;
-using SwipeCSAT.Api.Mapping;
 
 
 namespace SwipeCSAT.Api.Repositories
 {
     public class ProductRepository
     {
+        private readonly SwipeCSATDbContext _context;
+        
 
-        public readonly SwipeCSATDbContext _context;
-        public readonly CategoryRepository categoryRepository;
-
-        public ProductRepository(SwipeCSATDbContext context,CategoryRepository category)
+        public ProductRepository(SwipeCSATDbContext context, CategoryRepository category, ILogger<ProductRepository> loger)
         {
             _context = context;
-            categoryRepository = category;
-
-
         }
 
-        //Получение всех продуктов
         public async Task<List<ProductEntity>> GetAllProducts()
         {
-            return await _context.Products.AsNoTracking().ToListAsync();
+            return await _context.Products.Include(x => x.Category).Include(x=>x.Criterions).ToListAsync();
         }
 
-        //Получение продуктов с определенной категорией  
-        public async Task<List<ProductEntity>> GetCategoryProducts(string CategoryName)
+        public async Task<ProductEntity> GetProductByName(string name)
         {
-            return await _context.Products
-                .Include(x=> x.Category)
-                .Where(x => x.Category!.Name == CategoryName)
-                .AsNoTracking()
-                .ToListAsync();
-            
+            return await _context.Products.FirstOrDefaultAsync(x => x.Name == name)
+                ?? throw new Exception("Данный продукт не найден");
+        }
+        public async Task<List<ProductEntity>> GetProductsWithCategory(string categoryName)
+        {
+            return await _context.Products.Include(categoryName => categoryName.Category)
+                .Where(x => x.Category!.Name == categoryName)
+                .Include(x=>x.Criterions).ToListAsync();
+                
+        }
+        public async Task<ProductEntity> AddProduct(string name,string CategoryName,string description)
+        {
+            var category = await _context.Categories.Include(x=>x.Criterions).FirstOrDefaultAsync(x => x.Name == CategoryName)
+                ?? throw new Exception("Данный продукт не найден");
+            var product = new ProductEntity
+            {
+                Name = name,
+                Id = Guid.NewGuid(),
+                Description = description,
+                Category = category,
+                Criterions = category.Criterions
+
+            };
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return product;
         }
 
-        
-
-        
+        public async Task DeleteProduct(string name)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Name == name)
+                ?? throw new Exception("Данный продукт не найден");
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+        }
     }
 }
