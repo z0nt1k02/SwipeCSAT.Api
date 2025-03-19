@@ -19,7 +19,7 @@ namespace SwipeCSAT.Api.Endpoints
                 var criterions = await criterionsRepository.GetAllCriterions();
                 return Results.Ok(criterions.Select(x => x.ToFullDto()).ToList());
             });
-
+            
             //Добавление критерия
             group.MapPost("/",async(CriterionsRepository criterionsRepository,CriterionShortDto createCriterionDto)=>
             {

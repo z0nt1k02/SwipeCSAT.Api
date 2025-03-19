@@ -4,7 +4,8 @@
         Guid Id,
         string Name,
         List<string> Criterions,
-        string CategoryName
+        string CategoryName,
+        List<Guid> reviewsId
     );
     
 }

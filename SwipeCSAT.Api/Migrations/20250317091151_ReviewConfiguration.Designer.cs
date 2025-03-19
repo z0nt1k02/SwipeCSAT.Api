@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SwipeCSAT.Api;
@@ -11,9 +12,11 @@ using SwipeCSAT.Api;
 namespace SwipeCSAT.Api.Migrations
 {
     [DbContext(typeof(SwipeCSATDbContext))]
-    partial class SwipeCSATDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317091151_ReviewConfiguration")]
+    partial class ReviewConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,22 +88,25 @@ namespace SwipeCSAT.Api.Migrations
             modelBuilder.Entity("SwipeCSAT.Api.Entities.CriterionRatingEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("CriterionName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("CriterionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ReviewId")
+                    b.Property<Guid>("ReviewId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReviewId");
+                    b.HasIndex("CriterionId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CriterionRatings");
                 });
@@ -132,15 +138,9 @@ namespace SwipeCSAT.Api.Migrations
             modelBuilder.Entity("SwipeCSAT.Api.Entities.ReviewEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("ProductID")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductID");
 
                     b.ToTable("Reviews");
                 });
@@ -177,9 +177,23 @@ namespace SwipeCSAT.Api.Migrations
 
             modelBuilder.Entity("SwipeCSAT.Api.Entities.CriterionRatingEntity", b =>
                 {
+                    b.HasOne("SwipeCSAT.Api.Entities.CriterionEntity", "Criterion")
+                        .WithMany()
+                        .HasForeignKey("CriterionId");
+
                     b.HasOne("SwipeCSAT.Api.Entities.ReviewEntity", "Review")
                         .WithMany("CriterionRatings")
-                        .HasForeignKey("ReviewId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SwipeCSAT.Api.Entities.ProductEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Criterion");
+
+                    b.Navigation("Product");
 
                     b.Navigation("Review");
                 });
@@ -197,7 +211,7 @@ namespace SwipeCSAT.Api.Migrations
                 {
                     b.HasOne("SwipeCSAT.Api.Entities.ProductEntity", "ProductEntity")
                         .WithMany("Reviews")
-                        .HasForeignKey("ProductID")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

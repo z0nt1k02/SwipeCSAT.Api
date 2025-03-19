@@ -27,6 +27,11 @@ namespace SwipeCSAT.Api.Mapping
             );
         }
 
+        public static CriterionRatingDto ToDto(this CriterionRatingEntity criterionRatingEntity)
+        {
+            return new CriterionRatingDto(criterionRatingEntity.CriterionName, criterionRatingEntity.Rating);
+        }
+
 
     }
 }

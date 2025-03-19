@@ -24,7 +24,7 @@ namespace SwipeCSAT.Api.Endpoints
 
             group.MapGet("/{name}", async (string name, CategoryRepository repository) =>
             {
-                var category = await repository.GetCategoryByName(name);
+                var category = await repository.GetByName(name);
                 return Results.Ok(category.ToDto());
             }).WithName("GetCategoryByName");
 

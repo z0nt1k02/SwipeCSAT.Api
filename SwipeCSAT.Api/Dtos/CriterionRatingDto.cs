@@ -1,7 +1,8 @@
 ﻿namespace SwipeCSAT.Api.Dtos
 {
-    public class CriterionRatingDto
+    public record class CriterionRatingDto
     (
-
+       string CriterionName,
+       int Raiting
     );
 }

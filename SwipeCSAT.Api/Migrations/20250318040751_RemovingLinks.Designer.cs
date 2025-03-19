@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SwipeCSAT.Api;
@@ -11,9 +12,11 @@ using SwipeCSAT.Api;
 namespace SwipeCSAT.Api.Migrations
 {
     [DbContext(typeof(SwipeCSATDbContext))]
-    partial class SwipeCSATDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318040751_RemovingLinks")]
+    partial class RemovingLinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,7 +88,6 @@ namespace SwipeCSAT.Api.Migrations
             modelBuilder.Entity("SwipeCSAT.Api.Entities.CriterionRatingEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("CriterionName")
@@ -95,12 +97,7 @@ namespace SwipeCSAT.Api.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ReviewId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
 
                     b.ToTable("CriterionRatings");
                 });
@@ -135,12 +132,12 @@ namespace SwipeCSAT.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ProductID")
+                    b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductEntityId");
 
                     b.ToTable("Reviews");
                 });
@@ -179,7 +176,9 @@ namespace SwipeCSAT.Api.Migrations
                 {
                     b.HasOne("SwipeCSAT.Api.Entities.ReviewEntity", "Review")
                         .WithMany("CriterionRatings")
-                        .HasForeignKey("ReviewId");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Review");
                 });
@@ -197,9 +196,7 @@ namespace SwipeCSAT.Api.Migrations
                 {
                     b.HasOne("SwipeCSAT.Api.Entities.ProductEntity", "ProductEntity")
                         .WithMany("Reviews")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductEntityId");
 
                     b.Navigation("ProductEntity");
                 });

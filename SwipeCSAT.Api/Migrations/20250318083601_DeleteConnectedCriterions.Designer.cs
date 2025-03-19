@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SwipeCSAT.Api;
@@ -11,9 +12,11 @@ using SwipeCSAT.Api;
 namespace SwipeCSAT.Api.Migrations
 {
     [DbContext(typeof(SwipeCSATDbContext))]
-    partial class SwipeCSATDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318083601_DeleteConnectedCriterions")]
+    partial class DeleteConnectedCriterions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,12 +138,12 @@ namespace SwipeCSAT.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ProductID")
+                    b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductEntityId");
 
                     b.ToTable("Reviews");
                 });
@@ -197,9 +200,7 @@ namespace SwipeCSAT.Api.Migrations
                 {
                     b.HasOne("SwipeCSAT.Api.Entities.ProductEntity", "ProductEntity")
                         .WithMany("Reviews")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductEntityId");
 
                     b.Navigation("ProductEntity");
                 });

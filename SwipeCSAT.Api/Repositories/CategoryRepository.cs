@@ -21,7 +21,7 @@ public class CategoryRepository
        return await _context.Categories.Include(c=>c.Criterions).Include(x=>x.Products).ToListAsync();
     }
 
-    public async Task<CategoryEntity> GetCategoryByName(string name)
+    public async Task<CategoryEntity> GetByName(string name)
     {
         return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
             ?? throw new Exception("Данная категория не найдена");

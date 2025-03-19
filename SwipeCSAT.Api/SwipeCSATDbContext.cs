@@ -14,6 +14,7 @@ public class SwipeCSATDbContext:DbContext
     public DbSet<ProductEntity> Products { get; set; }
     public DbSet<CriterionRatingEntity> CriterionRatings { get; set; }
     public DbSet<CriterionEntity> Criterions { get; set; }
+    public DbSet<ReviewEntity> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +22,7 @@ public class SwipeCSATDbContext:DbContext
         modelBuilder.ApplyConfiguration(new ProductConfiguration());
         modelBuilder.ApplyConfiguration(new CriterionRatingConfiguration());
         modelBuilder.ApplyConfiguration(new CriterionConfiguration());
+        modelBuilder.ApplyConfiguration(new ReviewConfiguration());
     }
 }
 

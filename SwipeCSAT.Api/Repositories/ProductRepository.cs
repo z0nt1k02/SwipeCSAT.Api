@@ -16,12 +16,15 @@ namespace SwipeCSAT.Api.Repositories
 
         public async Task<List<ProductEntity>> GetAllProducts()
         {
-            return await _context.Products.Include(x => x.Category).Include(x=>x.Criterions).ToListAsync();
+            return await _context.Products.AsNoTracking().Include(x => x.Category).Include(x => x.Criterions).AsNoTracking().ToListAsync();
         }
 
         public async Task<ProductEntity> GetProductByName(string name)
         {
-            return await _context.Products.FirstOrDefaultAsync(x => x.Name == name)
+            return await _context.Products.AsNoTracking().Include(x=>x.Criterions)
+                .Include(x=>x.Category)
+                .Include(x=>x.Reviews)
+                .FirstOrDefaultAsync(x => x.Name == name)
                 ?? throw new Exception("Данный продукт не найден");
         }
         public async Task<List<ProductEntity>> GetProductsWithCategory(string categoryName)
@@ -51,8 +54,9 @@ namespace SwipeCSAT.Api.Repositories
 
         public async Task DeleteProduct(string name)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Name == name)
+            var product = await _context.Products.Include(x=>x.Reviews).ThenInclude(x=>x.CriterionRatings).FirstOrDefaultAsync(x => x.Name == name)
                 ?? throw new Exception("Данный продукт не найден");
+            _context.Reviews.RemoveRange(product.Reviews);
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
         }
