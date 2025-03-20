@@ -6,6 +6,7 @@ using SwipeCSAT.Api.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
 using SwipeCSAT.Api.Entities;
 using SwipeCSAT.Api.Mapping;
+using Newtonsoft.Json;
 
 namespace SwipeCSAT.Api.Endpoints
 {
@@ -47,7 +48,22 @@ namespace SwipeCSAT.Api.Endpoints
                 return Results.NoContent();
             });
 
-           
+            group.MapPatch("/{name}", async (string name, HttpRequest request, ProductRepository productRepository, SwipeCSATDbContext context) =>
+            {
+                var product = await productRepository.GetShortProductByName(name);
+                
+
+                using var reader = new StreamReader(request.Body);
+                var body = await reader.ReadToEndAsync();
+                var patchCategory = JsonConvert.DeserializeObject<JsonPatchDocument<ProductEntity>>(body);
+                patchCategory!.ApplyTo(product);
+                context.Products.Update(product);
+
+
+                await context.SaveChangesAsync();
+                return Results.Ok("Данные обновлены");
+            });
+
 
             return group;
         }

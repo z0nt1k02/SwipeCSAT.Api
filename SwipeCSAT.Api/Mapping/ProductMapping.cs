@@ -13,7 +13,8 @@ namespace SwipeCSAT.Api.Mapping
                 product.Name,
                 product.Criterions.Select(x=> x.Name).ToList(),
                 product.Category!.Name,
-                product.Reviews.Select(x=>x.Id).ToList()
+                product.Reviews.Select(x=>x.Id).ToList(),
+                product.Description
             );
         }
 

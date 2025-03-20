@@ -3,12 +3,21 @@ using SwipeCSAT.Api.Endpoints;
 using SwipeCSAT.Api;
 using Microsoft.EntityFrameworkCore;
 using SwipeCSAT.Api.Repositories;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+});
 
 builder.Services.AddDbContext<SwipeCSATDbContext>(options =>
 {
@@ -20,7 +29,10 @@ builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<CriterionsRepository>();
 builder.Services.AddScoped<ReviewsRepository>();
 
-//builder.Services.AddControllers().AddNewtonsoftJson();
+
+
+
+
 var app = builder.Build();
 
 

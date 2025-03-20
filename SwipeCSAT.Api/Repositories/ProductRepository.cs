@@ -18,7 +18,11 @@ namespace SwipeCSAT.Api.Repositories
         {
             return await _context.Products.AsNoTracking().Include(x => x.Category).Include(x => x.Criterions).AsNoTracking().ToListAsync();
         }
-
+        public async Task<ProductEntity> GetShortProductByName(string name)
+        {
+            return await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Name == name) 
+                ?? throw new Exception("Продукт не найден");
+        }
         public async Task<ProductEntity> GetProductByName(string name)
         {
             return await _context.Products.AsNoTracking().Include(x=>x.Criterions)
