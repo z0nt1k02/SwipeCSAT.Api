@@ -16,6 +16,8 @@ public class SwipeCSATDbContext:DbContext
     public DbSet<CriterionEntity> Criterions { get; set; }
     public DbSet<ReviewEntity> Reviews { get; set; }
 
+    public DbSet<UserEntity> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new CategoryConfiguration());

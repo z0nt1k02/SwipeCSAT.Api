@@ -27,8 +27,9 @@ namespace SwipeCSAT.Api.Repositories
         
         public async Task<ReviewEntity> Add(string productName, List<int> ratings)
         {
-            var product = await _context.Products.Include(x=>x.Category).ThenInclude(x=>x.Criterions).FirstOrDefaultAsync(x => x.Name == productName)
+            var product = await _context.Products.Include(x=>x.Category).ThenInclude(x=>x!.Criterions).FirstOrDefaultAsync(x => x.Name == productName)
                 ?? throw new Exception("Данный продукт не найден");
+            
             // Создаём новый отзыв
             var newReview = new ReviewEntity
             {

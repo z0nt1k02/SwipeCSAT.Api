@@ -42,7 +42,7 @@ public class CategoryRepository
         {
             var criterion = await _context.Criterions.FirstOrDefaultAsync(x => x.Name == criterionName)
                 ?? throw new Exception("Данный критерий не найден");
-
+                
             category.Criterions.Add(criterion);
             criterion.Categories.Add(category);
             //_context.Criterions.Attach(criterion);

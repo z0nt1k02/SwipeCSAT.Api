@@ -12,17 +12,17 @@ using Newtonsoft.Json;
 
 namespace SwipeCSAT.Api.Endpoints
 {
-    public static class CategoriesEndpoints
+    public static class CategoriesEndpoints 
     {
         public static RouteGroupBuilder MapCategoriesEndpoints(this WebApplication app)
         {
-            var group = app.MapGroup("api/categories");
+            var group = app.MapGroup("api/categories").RequireAuthorization();
 
             group.MapGet("/", async (CategoryRepository repository) =>
             {
                 var categories = await repository.GetAllCategories();
                 return Results.Ok(categories.Select(x=> x.ToDto()).ToList());
-            });
+            }).RequireAuthorization();
 
 
             group.MapGet("/{name}", async (string name, CategoryRepository repository) =>
