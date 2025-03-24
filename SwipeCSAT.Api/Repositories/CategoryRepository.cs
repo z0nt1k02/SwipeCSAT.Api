@@ -7,24 +7,23 @@ namespace SwipeCSAT.Api.Repositories;
 
 public class CategoryRepository
 {
-    private readonly SwipeCSATDbContext _context;
-    
+    private readonly SwipeCsatDbContext _context;
 
-    
-    public CategoryRepository(SwipeCSATDbContext context)
+
+    public CategoryRepository(SwipeCsatDbContext context)
     {
         _context = context;
     }
 
     public async Task<List<CategoryEntity>> GetAllCategories()
     {
-       return await _context.Categories.Include(c=>c.Criterions).Include(x=>x.Products).ToListAsync();
+        return await _context.Categories.Include(c => c.Criterions).Include(x => x.Products).ToListAsync();
     }
 
     public async Task<CategoryEntity> GetByName(string name)
     {
         return await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
-            ?? throw new Exception("Данная категория не найдена");
+               ?? throw new Exception("Данная категория не найдена");
     }
 
     public async Task<FullCategoryDto> Add(string name, List<string> criterionsNames)
@@ -41,15 +40,14 @@ public class CategoryRepository
         foreach (var criterionName in criterionsNames)
         {
             var criterion = await _context.Criterions.FirstOrDefaultAsync(x => x.Name == criterionName)
-                ?? throw new Exception("Данный критерий не найден");
-                
+                            ?? throw new Exception("Данный критерий не найден");
+
             category.Criterions.Add(criterion);
             criterion.Categories.Add(category);
             //_context.Criterions.Attach(criterion);
-            
         }
         //_context.Categories.Attach(category);
-        
+
         await _context.SaveChangesAsync();
         return category.ToDto();
     }
@@ -57,12 +55,8 @@ public class CategoryRepository
     public async Task DeleteCategory(string name)
     {
         var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
-            ?? throw new Exception("Данная категория не найдена");
+                       ?? throw new Exception("Данная категория не найдена");
         _context.Categories.Remove(category);
         await _context.SaveChangesAsync();
     }
-
-
-
 }
-

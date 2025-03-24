@@ -12,15 +12,9 @@ public class CategoryConfiguration : IEntityTypeConfiguration<CategoryEntity>
 
         builder.HasMany(x => x.Products)
             .WithOne(x => x.Category);
-            
+
 
         builder.HasMany(x => x.Criterions)
-            .WithMany(x => x.Categories).UsingEntity(j=>j.ToTable("CategoryCriterion"));
-            
+            .WithMany(x => x.Categories).UsingEntity(j => j.ToTable("CategoryCriterion"));
     }
 }
-
-
-
-
-

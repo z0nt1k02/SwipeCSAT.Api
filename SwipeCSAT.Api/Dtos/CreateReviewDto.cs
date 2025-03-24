@@ -1,8 +1,5 @@
-﻿namespace SwipeCSAT.Api.Dtos
-{
-    public record class CreateReviewDto
-    (
-        List<int> ratings
-        );
+﻿namespace SwipeCSAT.Api.Dtos;
 
-}
+public record class CreateReviewDto(
+    List<int> ratings
+);

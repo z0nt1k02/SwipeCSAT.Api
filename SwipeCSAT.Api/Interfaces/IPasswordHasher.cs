@@ -1,9 +1,8 @@
-﻿namespace SwipeCSAT.Api.Interfaces
-{
-    public interface IPasswordHasher
-    {
-        string Generate(string password);
+﻿namespace SwipeCSAT.Api.Interfaces;
 
-        bool Verify(string password, string hashedPassword);
-    }
+public interface IPasswordHasher
+{
+    string Generate(string password);
+
+    bool Verify(string password, string hashedPassword);
 }

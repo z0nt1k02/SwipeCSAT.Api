@@ -1,59 +1,58 @@
-﻿using SwipeCSAT.Api.Endpoints;
-using Microsoft.AspNetCore.Routing;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using SwipeCSAT.Api.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using SwipeCSAT.Api.Endpoints;
+using SwipeCSAT.Api.Infrastructure;
 
-namespace SwipeCSAT.Api.Extensions
+namespace SwipeCSAT.Api.Extensions;
+
+public static class ApiExtensions
 {
-    public static class ApiExtensions
+    public static void AddMappedEndpoints(this IEndpointRouteBuilder app)
     {
-
-        public static void AddMappedEndpoints(this IEndpointRouteBuilder app)
+        if (app is WebApplication webApp)
         {
-            if(app is WebApplication webApp)
-            {
-                CategoriesEndpoints.MapCategoriesEndpoints(webApp);
-                CriterionsEndpoints.MapCriterionsEdnpoints(webApp);
-                ProductsEndpoints.MapProductsEndpoints(webApp);
-                ReviewsEndpoints.MapReviewsEndpoints(webApp);
-                UsersEndpoints.MapUsersEndpoints(webApp);
-            }
-            
+            webApp.MapCategoriesEndpoints();
+            webApp.MapCriterionsEdnpoints();
+            webApp.MapProductsEndpoints();
+            webApp.MapReviewsEndpoints();
+            webApp.MapUsersEndpoints();
         }
+    }
 
-        public static void AddApiAuthentication(this IServiceCollection services,
-            IOptions<JwtOptions> jwtOptions)
-        {
-            
-            services.AddAuthentication(options =>{
+    public static void AddApiAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
+        
+        services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new()
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey)) 
-                    };
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions!.SecretKey))
+                };
 
-                    options.Events = new JwtBearerEvents
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        OnMessageReceived = context =>
-                        {
+                        context.Token = context.Request.Cookies["tasty-cookies"];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
-                            context.Token = context.Request .Cookies["tasty-cookies"];
-                            return Task.CompletedTask;
-                        },
-                    };
-                });
-            services.AddAuthorization();
-        }
+        services.AddAuthorization();
+
+
     }
 }

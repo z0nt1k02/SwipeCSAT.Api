@@ -8,9 +8,6 @@ public class CriterionRatingConfiguration : IEntityTypeConfiguration<CriterionRa
 {
     public void Configure(EntityTypeBuilder<CriterionRatingEntity> builder)
     {
-        builder.HasKey(c => c.Id); 
-            
+        builder.HasKey(c => c.Id);
     }
 }
-
-

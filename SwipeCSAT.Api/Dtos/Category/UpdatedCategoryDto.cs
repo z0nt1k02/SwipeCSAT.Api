@@ -1,9 +1,5 @@
-﻿using SwipeCSAT.Api.Entities;
+﻿namespace SwipeCSAT.Api.Dtos;
 
-namespace SwipeCSAT.Api.Dtos
-{
-    public record class UpdatedCategoryDto
-    (
-        string NewName
-    );
-}
+public record class UpdatedCategoryDto(
+    string NewName
+);

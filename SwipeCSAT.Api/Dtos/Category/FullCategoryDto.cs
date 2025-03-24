@@ -1,12 +1,8 @@
-﻿
+﻿namespace SwipeCSAT.Api.Dtos;
 
-namespace SwipeCSAT.Api.Dtos
-{
-    public record class FullCategoryDto(
-        Guid Id,
-        string Name,
-        List<string> CriterionsNames,
-        List<string> Products
-    );
-    
-}
+public record class FullCategoryDto(
+    Guid Id,
+    string Name,
+    List<string> CriterionsNames,
+    List<string> Products
+);

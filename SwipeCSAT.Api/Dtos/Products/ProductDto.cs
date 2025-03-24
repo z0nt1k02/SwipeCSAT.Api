@@ -1,12 +1,10 @@
-﻿namespace SwipeCSAT.Api.Dtos
-{
-    public record class ProductDto(
-        Guid Id,
-        string Name,
-        List<string> Criterions,
-        string CategoryName,
-        List<Guid> reviewsId,
-        string Description
-    );
-    
-}
+﻿namespace SwipeCSAT.Api.Dtos;
+
+public record class ProductDto(
+    Guid Id,
+    string Name,
+    List<string> Criterions,
+    string CategoryName,
+    List<Guid> reviewsId,
+    string Description
+);

@@ -1,40 +1,40 @@
 ﻿using SwipeCSAT.Api.Entities;
-using SwipeCSAT.Api.Infrastructure;
 using SwipeCSAT.Api.Interfaces;
 using SwipeCSAT.Api.Repositories;
 
-namespace SwipeCSAT.Api.Services
+namespace SwipeCSAT.Api.Services;
+
+public class UserService
 {
-    public class UserService
+    private readonly IJwtProvider _jwtProvider;
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly UserRepository _userRepository;
+
+    public UserService(IPasswordHasher passwordHasher, UserRepository userRepository, IJwtProvider jwtProvider)
     {
-        private readonly IPasswordHasher _passwordHasher;
-        private readonly UserRepository _userRepository;
-        private readonly IJwtProvider _jwtProvider;
-        public UserService(IPasswordHasher passwordHasher,UserRepository userRepository,IJwtProvider jwtProvider)
-        {
-            _passwordHasher = passwordHasher;
-            _userRepository = userRepository;
-            _jwtProvider = jwtProvider;
-        }
-        public async Task Register(string userName,string email,string password)
-        {
-            var hashedPassword = _passwordHasher.Generate(password);
+        _passwordHasher = passwordHasher;
+        _userRepository = userRepository;
+        _jwtProvider = jwtProvider;
+    }
 
-            var user = UserEntity.Create(Guid.NewGuid(), userName, hashedPassword, email);
+    public async Task Register(string userName, string email, string password)
+    {
+        var hashedPassword = _passwordHasher.Generate(password);
 
-            await _userRepository.Add(user);
-        }
+        var user = UserEntity.Create(Guid.NewGuid(), userName, hashedPassword, email);
 
-        public async Task<string> Login(string email,string password)
-        {
-            var user = await _userRepository.GetByEmail(email);
-            var result = _passwordHasher.Verify(password, user.PasswordHash);
+        await _userRepository.Add(user);
+    }
 
-            if (!result)
-                throw new Exception("Неправильный пароль");
+    public async Task<string> Login(string email, string password)
+    {
+        var user = await _userRepository.GetByEmail(email);
+        var result = _passwordHasher.Verify(password, user.PasswordHash);
 
-            var token = _jwtProvider.GenerateToken(user);
-            return token; 
-        }
+        if (!result)
+            throw new Exception("Неправильный пароль");
+
+        var token = _jwtProvider.GenerateToken(user);
+        return token;
     }
 }

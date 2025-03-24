@@ -1,9 +1,8 @@
 ﻿using SwipeCSAT.Api.Entities;
 
-namespace SwipeCSAT.Api.Interfaces
+namespace SwipeCSAT.Api.Interfaces;
+
+public interface IJwtProvider
 {
-    public interface IJwtProvider
-    {
-        string GenerateToken(UserEntity userEntity);
-    }
+    string GenerateToken(UserEntity userEntity);
 }

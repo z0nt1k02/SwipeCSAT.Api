@@ -12,7 +12,7 @@ using SwipeCSAT.Api;
 
 namespace SwipeCSAT.Api.Migrations
 {
-    [DbContext(typeof(SwipeCSATDbContext))]
+    [DbContext(typeof(SwipeCsatDbContext))]
     [Migration("20250312060530_InitialMigration")]
     partial class InitialMigration
     {

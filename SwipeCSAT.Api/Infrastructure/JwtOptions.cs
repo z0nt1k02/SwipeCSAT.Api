@@ -1,9 +1,8 @@
-﻿namespace SwipeCSAT.Api.Infrastructure
-{
-    public class JwtOptions
-    {
-        public string SecretKey { get; set; } = string.Empty;
+﻿namespace SwipeCSAT.Api.Infrastructure;
 
-        public int ExpiresHours { get; set; }
-    }
+public class JwtOptions
+{
+    public string SecretKey { get; set; } = string.Empty;
+
+    public int ExpiresHours { get; set; }
 }

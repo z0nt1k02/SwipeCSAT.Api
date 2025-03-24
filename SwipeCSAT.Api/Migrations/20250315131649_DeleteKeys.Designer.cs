@@ -11,7 +11,7 @@ using SwipeCSAT.Api;
 
 namespace SwipeCSAT.Api.Migrations
 {
-    [DbContext(typeof(SwipeCSATDbContext))]
+    [DbContext(typeof(SwipeCsatDbContext))]
     [Migration("20250315131649_DeleteKeys")]
     partial class DeleteKeys
     {

@@ -11,7 +11,7 @@ using SwipeCSAT.Api;
 
 namespace SwipeCSAT.Api.Migrations
 {
-    [DbContext(typeof(SwipeCSATDbContext))]
+    [DbContext(typeof(SwipeCsatDbContext))]
     [Migration("20250317091151_ReviewConfiguration")]
     partial class ReviewConfiguration
     {
