@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SwipeCSAT.Api.Authorization;
 using SwipeCSAT.Api.Entities;
 using SwipeCSAT.Api.Interfaces;
 
@@ -16,9 +17,10 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     public string GenerateToken(UserEntity userEntity)
     {
         
-        Claim[] claims = [
-            new("userId", userEntity.Id.ToString()),
-            new("Admin","true")
+        Claim[] claims = 
+        [
+            new(CustomClaims.userId, userEntity.Id.ToString()),
+            
         ];
         if(string.IsNullOrEmpty(options.Value.SecretKey))
         {

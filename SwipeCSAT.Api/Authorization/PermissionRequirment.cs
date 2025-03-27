@@ -3,8 +3,11 @@ using SwipeCSAT.Api.Enums;
 
 namespace SwipeCSAT.Api.Authorization;
 
-public class PermissionRequirment(Permission[] permissions) : IAuthorizationRequirement
+public class PermissionRequirment : IAuthorizationRequirement
 {
-    
+    public PermissionRequirment(Permission[] permissions)
+    {
+        Permissions = permissions;
+    }
     public Permission[] Permissions { get; set; } = [];
 }

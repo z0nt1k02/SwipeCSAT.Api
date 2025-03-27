@@ -1,8 +1,13 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using SwipeCSAT.Api.Authorization;
 using SwipeCSAT.Api.Endpoints;
+using SwipeCSAT.Api.Enums;
 using SwipeCSAT.Api.Infrastructure;
+using SwipeCSAT.Api.Interfaces;
+using SwipeCSAT.Api.Services;
 
 namespace SwipeCSAT.Api.Extensions;
 
@@ -50,9 +55,18 @@ public static class ApiExtensions
                     }
                 };
             });
+        services.AddScoped<IPermissionService,PermissionService>();
+        services.AddSingleton<IAuthorizationHandler,PermissionAuthorizationHandler>();
 
         services.AddAuthorization();
+    }
 
+    public static IEndpointConventionBuilder RequirePermissions<TBuilder>(this TBuilder builder,
+        params Permission[] permissions) where TBuilder : IEndpointConventionBuilder
+    {
+        return builder.RequireAuthorization(policy =>
+            policy.AddRequirements(new PermissionRequirment(permissions)));
 
     }
+    
 }

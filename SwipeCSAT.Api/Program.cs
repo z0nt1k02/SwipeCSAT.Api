@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
@@ -15,7 +16,8 @@ var services = builder.Services;
 var configuration = builder.Configuration;
 
 services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
-services.Configure<AuthorizationOptions>(configuration.GetSection(nameof(AuthorizationOptions)));
+services.Configure<SwipeCSAT.Api.Repositories.AuthorizationOptions>(configuration.GetSection(nameof(SwipeCSAT.Api.Repositories.AuthorizationOptions)));
+
 
 services.AddApiAuthentication(configuration);
 
@@ -39,6 +41,8 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
 
 
 var app = builder.Build();
@@ -53,14 +57,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.AddMappedEndpoints();
 
-app.MapGet("/", async (HttpContext context, CategoryRepository repository) =>
+app.MapGet("get", () =>
 {
-    if (!context.User.HasClaim("Admin", "true"))
-    {
-        return Results.Unauthorized();
-    }
-
-    return Results.Ok("Вы авторизованы как admin");
-}).RequireAuthorization(policy => policy.AddRequirements(new PermissionRequirment([Permission.Read])));
+    return Results.Ok("ok");
+}).RequirePermissions(Permission.Read);
 
 app.Run();
