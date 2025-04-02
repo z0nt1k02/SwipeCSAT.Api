@@ -11,6 +11,6 @@ public static class ReviewMapping
 
         foreach (var criterionRating in reviewEntity.CriterionRatings)
             criterionRatings.Add(criterionRating.CriterionName, criterionRating.Rating);
-        return new ReviewDto(reviewEntity.Id, criterionRatings, reviewEntity.ProductEntity!.Name);
+        return new ReviewDto(reviewEntity.Id, criterionRatings, reviewEntity.ProductEntity!.Name,reviewEntity.UserId.ToString());
     }
 }

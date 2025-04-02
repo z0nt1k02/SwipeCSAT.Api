@@ -21,6 +21,7 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
         [
             new(CustomClaims.userId, userEntity.Id.ToString()),
             
+            
         ];
         if(string.IsNullOrEmpty(options.Value.SecretKey))
         {

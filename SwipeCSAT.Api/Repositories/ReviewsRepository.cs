@@ -22,7 +22,7 @@ public class ReviewsRepository
     }
 
 
-    public async Task<ReviewEntity> Add(string productName, List<int> ratings)
+    public async Task<ReviewEntity> Add(string productName, List<int> ratings,Guid userId)
     {
         var product = await _context.Products.Include(x => x.Category).ThenInclude(x => x!.Criterions)
                           .FirstOrDefaultAsync(x => x.Name == productName)
@@ -33,7 +33,8 @@ public class ReviewsRepository
         {
             Id = Guid.NewGuid(),
             ProductEntity = product,
-            CriterionRatings = new List<CriterionRatingEntity>()
+            CriterionRatings = new List<CriterionRatingEntity>(),
+            UserId = userId
         };
         _context.Reviews.Add(newReview);
 
@@ -61,11 +62,9 @@ public class ReviewsRepository
         return newReview;
     }
 
-    public async Task DeleteCategory(string name)
+    public async Task<ReviewEntity> GetById(string reviewId)
     {
-        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Name == name)
-                       ?? throw new Exception("Данная категория не найдена");
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        var review = await _context.Reviews.Include(c=>c.CriterionRatings).FirstAsync(r=> r.Id==Guid.Parse(reviewId));
+        return review;
     }
 }

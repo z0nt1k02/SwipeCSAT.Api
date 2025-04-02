@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using SwipeCSAT.Api.Dtos;
 using SwipeCSAT.Api.Entities;
+using SwipeCSAT.Api.Enums;
+using SwipeCSAT.Api.Extensions;
 using SwipeCSAT.Api.Mapping;
 using SwipeCSAT.Api.Repositories;
 
@@ -17,28 +19,28 @@ public static class CategoriesEndpoints
         {
             var categories = await repository.GetAllCategories();
             return Results.Ok(categories.Select(x => x.ToDto()).ToList());
-        }).RequireAuthorization("AdminPolicy");
+        }).RequirePermissions(Permission.Read);
 
 
         group.MapGet("/{name}", async (string name, CategoryRepository repository) =>
         {
             var category = await repository.GetByName(name);
             return Results.Ok(category.ToDto());
-        }).WithName("GetCategoryByName");
+        }).WithName("GetCategoryByName").RequirePermissions(Permission.Read);
 
 
         group.MapPost("/", async (CreateCategoryDto createCategoryDto, CategoryRepository repository) =>
         {
             var category = await repository.Add(createCategoryDto.Name, createCategoryDto.CriterionsNames);
             return Results.CreatedAtRoute("GetCategoryByName", new { name = category.Name }, category);
-        });
+        }).RequirePermissions(Permission.Create);
 
 
         group.MapDelete("/{name}", async (string name, CategoryRepository repository) =>
         {
             await repository.DeleteCategory(name);
             return Results.NoContent();
-        });
+        }).RequirePermissions(Permission.Delete);
 
 
         group.MapPatch("/{name}",
@@ -55,7 +57,7 @@ public static class CategoriesEndpoints
                 context.Categories.Update(category);
                 await context.SaveChangesAsync();
                 return Results.Ok("Данные обновлены");
-            });
+            }).RequirePermissions(Permission.Update);
 
         return group;
     }

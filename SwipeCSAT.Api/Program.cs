@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using SwipeCSAT.Api;
@@ -8,6 +9,7 @@ using SwipeCSAT.Api.Enums;
 using SwipeCSAT.Api.Extensions;
 using SwipeCSAT.Api.Infrastructure;
 using SwipeCSAT.Api.Interfaces;
+using SwipeCSAT.Api.Middlewares;
 using SwipeCSAT.Api.Repositories;
 using SwipeCSAT.Api.Services;
 
@@ -31,6 +33,13 @@ builder.Services.AddDbContext<SwipeCsatDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
 });
+
+builder.Services.AddExceptionHandler(options => 
+{
+    options.ExceptionHandlingPath = "/error";
+});
+
+
 builder.Logging.AddConsole();
 builder.Services.AddScoped<CategoryRepository>();
 builder.Services.AddScoped<ProductRepository>();
@@ -47,19 +56,23 @@ builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler
 
 var app = builder.Build();
 
+
+
 app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
     HttpOnly = HttpOnlyPolicy.Always,
     // Secure = CookieSecurePolicy.Always
 });
+
+app.UseHttpsRedirection();
+app.UseExceptionHandler();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+
+
 app.AddMappedEndpoints();
 
-app.MapGet("get", () =>
-{
-    return Results.Ok("ok");
-}).RequirePermissions(Permission.Read);
 
 app.Run();

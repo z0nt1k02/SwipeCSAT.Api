@@ -1,8 +1,9 @@
-﻿using SwipeCSAT.Api.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using SwipeCSAT.Api.Entities;
 
 namespace SwipeCSAT.Api.Dtos;
 
 public record class RegisterUserRequest(
     string UserName,
-    string Email,
-    string Password);
+    [EmailAddress]string Email,
+    [StringLength(50,MinimumLength = 7)]string Password);

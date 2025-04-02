@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using SwipeCSAT.Api.Dtos;
 using SwipeCSAT.Api.Entities;
+using SwipeCSAT.Api.Enums;
+using SwipeCSAT.Api.Extensions;
 using SwipeCSAT.Api.Mapping;
 using SwipeCSAT.Api.Repositories;
 
@@ -18,32 +20,32 @@ public static class ProductsEndpoints
         {
             var products = await repository.GetAllProducts();
             return Results.Ok(products.Select(x => x.ToDto()).ToList());
-        });
+        }).RequirePermissions(Permission.Read);
 
         group.MapGet("/{name}", async (string name, ProductRepository repository) =>
         {
             var product = await repository.GetProductByName(name);
             return Results.Ok(product.ToDto());
-        }).WithName("GetProductByName");
+        }).WithName("GetProductByName").RequirePermissions(Permission.Read);
 
         group.MapGet("/category/{categoryName}", async (string categoryName, ProductRepository repository) =>
         {
             var products = await repository.GetProductsWithCategory(categoryName);
             return Results.Ok(products.Select(x => x.ToDto()).ToList());
-        });
+        }).RequirePermissions(Permission.Read);
 
         group.MapPost("/", async (CreateProductDto createProductDto, ProductRepository productRepository) =>
         {
             var productEntity = await productRepository.AddProduct(createProductDto.Name, createProductDto.CategoryName,
                 createProductDto.Description);
             return Results.CreatedAtRoute("GetProductByName", new { name = productEntity.Name }, productEntity.ToDto());
-        });
+        }).RequirePermissions(Permission.Create);
 
         group.MapDelete("/{name}", async (string name, ProductRepository productRepository) =>
         {
             await productRepository.DeleteProduct(name);
             return Results.NoContent();
-        });
+        }).RequirePermissions(Permission.Create);
 
         group.MapPatch("/{name}",
             async (string name, HttpRequest request, ProductRepository productRepository, SwipeCsatDbContext context) =>
@@ -60,7 +62,7 @@ public static class ProductsEndpoints
 
                 await context.SaveChangesAsync();
                 return Results.Ok("Данные обновлены");
-            });
+            }).RequirePermissions(Permission.Update);
 
 
         return group;

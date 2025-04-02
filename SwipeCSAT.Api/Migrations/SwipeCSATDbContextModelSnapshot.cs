@@ -119,7 +119,7 @@ namespace SwipeCSAT.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PermissionEntity");
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
@@ -141,6 +141,21 @@ namespace SwipeCSAT.Api.Migrations
                         {
                             Id = 4,
                             Name = "Delete"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "CreateReview"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "UpdateReview"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "DeleteReview"
                         });
                 });
 
@@ -177,9 +192,17 @@ namespace SwipeCSAT.Api.Migrations
                     b.Property<Guid?>("ProductEntityId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("UserEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProductEntityId");
+
+                    b.HasIndex("UserEntityId");
 
                     b.ToTable("Reviews");
                 });
@@ -225,7 +248,7 @@ namespace SwipeCSAT.Api.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermissionEntity");
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("SwipeCSAT.Api.Entities.UserEntity", b =>
@@ -320,6 +343,10 @@ namespace SwipeCSAT.Api.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("ProductEntityId");
 
+                    b.HasOne("SwipeCSAT.Api.Entities.UserEntity", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserEntityId");
+
                     b.Navigation("ProductEntity");
                 });
 
@@ -366,6 +393,11 @@ namespace SwipeCSAT.Api.Migrations
             modelBuilder.Entity("SwipeCSAT.Api.Entities.ReviewEntity", b =>
                 {
                     b.Navigation("CriterionRatings");
+                });
+
+            modelBuilder.Entity("SwipeCSAT.Api.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

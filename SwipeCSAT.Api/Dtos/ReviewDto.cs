@@ -3,5 +3,6 @@
 public record class ReviewDto(
     Guid Id,
     Dictionary<string, int> Data,
-    string ProductName
+    string ProductName,
+    string userId
 );

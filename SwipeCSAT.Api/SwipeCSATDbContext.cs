@@ -17,6 +17,9 @@ public class SwipeCsatDbContext(DbContextOptions<SwipeCsatDbContext> options,IOp
 
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<RoleEntity> Roles { get; set; }
+    
+    public DbSet<PermissionEntity> Permissions { get; set; }
+    public DbSet<RolePermissionEntity> RolePermissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

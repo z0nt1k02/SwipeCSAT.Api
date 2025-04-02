@@ -16,6 +16,8 @@ public class UserEntity
 
     public string Email { get; private set; }
 
+    public ReviewEntity[] Reviews { get; set; } = [];
+
     public ICollection<RoleEntity> Roles { get; set; } = [];
     public static UserEntity Create(Guid id, string username, string passwordHash, string email)
     {
