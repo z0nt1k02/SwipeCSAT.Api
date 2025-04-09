@@ -17,7 +17,10 @@ public class CategoryRepository
 
     public async Task<List<CategoryEntity>> GetAllCategories()
     {
-        return await _context.Categories.Include(c => c.Criterions).Include(x => x.Products).ToListAsync();
+        return await _context.Categories
+            .Include(c => c.Criterions)
+            .Include(x => x.Products)
+            .ToListAsync();
     }
 
     public async Task<CategoryEntity> GetByName(string name)

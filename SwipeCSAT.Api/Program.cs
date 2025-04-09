@@ -5,11 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using SwipeCSAT.Api;
 using SwipeCSAT.Api.Authorization;
-using SwipeCSAT.Api.Enums;
 using SwipeCSAT.Api.Extensions;
 using SwipeCSAT.Api.Infrastructure;
 using SwipeCSAT.Api.Interfaces;
-using SwipeCSAT.Api.Middlewares;
 using SwipeCSAT.Api.Repositories;
 using SwipeCSAT.Api.Services;
 
@@ -24,17 +22,17 @@ services.Configure<SwipeCSAT.Api.Repositories.AuthorizationOptions>(configuratio
 services.AddApiAuthentication(configuration);
 
 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
+services.AddControllers().AddNewtonsoftJson(options =>
 {
     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 });
 
-builder.Services.AddDbContext<SwipeCsatDbContext>(options =>
+services.AddDbContext<SwipeCsatDbContext>(options =>
 {
     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")).EnableSensitiveDataLogging();
 });
 
-builder.Services.AddExceptionHandler(options => 
+services.AddExceptionHandler(options => 
 {
     options.ExceptionHandlingPath = "/error";
 });
@@ -76,3 +74,4 @@ app.AddMappedEndpoints();
 
 
 app.Run();
+public partial class Program { }

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.13.35818.85 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwipeCSAT.Api", "SwipeCSAT.Api\SwipeCSAT.Api.csproj", "{045EB96B-7B21-4C31-B6AC-62D00B3769DA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwipeCSAT.Test", "SwipeCSAT.Test\SwipeCSAT.Test.csproj", "{1FF3C968-895D-4AE8-9E68-C63441ECA7AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{045EB96B-7B21-4C31-B6AC-62D00B3769DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{045EB96B-7B21-4C31-B6AC-62D00B3769DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{045EB96B-7B21-4C31-B6AC-62D00B3769DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FF3C968-895D-4AE8-9E68-C63441ECA7AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FF3C968-895D-4AE8-9E68-C63441ECA7AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FF3C968-895D-4AE8-9E68-C63441ECA7AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FF3C968-895D-4AE8-9E68-C63441ECA7AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
